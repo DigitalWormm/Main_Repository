@@ -16,21 +16,46 @@ File extensions are great ways to distinguish whether a library file is static o
 4. lib - Similar to _dll_, _lib_ files are _library_ files which are static. It is the windows counterpart of _a_ or _archive_ files. It is also mostly exclusive to visual studio compilers.
 
 ### GNU AR
-AR is a tool in GNU ( a collection of developer tools, like a library ) which is mainly used for 
+AR is a tool in GNU ( a collection of developer tools, like a library ) which I use for creating static Libraries. 
 
 ### G++ Review
-Short Description
+G++ is a compiler from GNU that compiles C++ code. If you use vscode, then you may have heard code runner. If not then you likely have at least manually compiled your c++ code. A great example of compiling using G++ is the following.
+```
+g++ Main.cpp -o Main
+```
+1. g++ invokes or calls the compiler
+2. Main.cpp is the program/source code to be compiled
+3. -o is a g++ option that specifies the name of the output file
+4. Main is the name of the output file. Ends up as 'Main.exe'
 
 ## How to Create a Static Library
 Short Description
 
 ## How to Link a Static Library
-Short Description
+When downloading an external library, you must link it to the source code where it is implemented. You can do this by doing the following commands. We will use the library 'curl' as an example. We have Main.cpp as our source code. 
 
+### Main.cpp
 ```
-std::cout << "Hello World";
+#include <iostream>
+#include "curl/curl.h"
+
+int main(){
+  std::cout << "Hello World";
+}
+```
+### Location of Curl Library
+Note: The current directory is 'MyProject'. This will be relevant later when we link the library.
+```
+C:/user/MyProject/src/CURL
 ```
 
-Do you know da wae
-- item 1
-- item 2
+Now if you try to compile the program, you would get an error. This is because the library curl is not yet linked to it. To do this, you can run the following command.
+```
+g++ -static Main.cpp -o Main -L./src/CURL/lib -I./src/CURL/include -lcurl
+```
+1. _-static_ is called here because we are linking the program statically and there are no external dependencies/dynamic libraries involved
+2. _-L._ is called here to help the compiler locate the library to be used. Note we want to use _'libcurl.a'_. We do not have to specify the current directory (MyProject), although you could if you want to. Same goes for -I
+3. _I._ is called here to locate the header files. Specify the path where the header files are.
+4. -l is the library name we want to use. -lcurl expands to libcurl.a
+
+That is it for linking static libraries.
